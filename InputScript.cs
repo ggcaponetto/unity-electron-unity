@@ -33,9 +33,14 @@ public class InputScript : MonoBehaviour
                 Debug.Log(clickInfo);
                 Debug.Log("Hit " + hit.ToString());
                 // ReadCommand();
-                WriteCommand(clickInfo);
+                // WriteCommand(clickInfo);
+                SendCommand(clickInfo);
             }
         }
+    }
+
+    void SendCommand(string commandString) {
+        StartCoroutine(browserIO.GetRequest("http://localhost:3000/?command=" + commandString));        
     }
 
     void ReadCommand() {
@@ -45,4 +50,5 @@ public class InputScript : MonoBehaviour
     {
         browserIO.WriteString(commandString);
     }
+
 }
