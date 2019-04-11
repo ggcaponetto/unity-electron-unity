@@ -1,0 +1,7 @@
+{"action":"click"}
+{"action":"click"}
+{"action":"click"}
+{"action":"click"}
+{"action":"click"}
+{"action":"click"}
+{"action":"click","payload":"x: 27.00375, y: 17.82986"}
