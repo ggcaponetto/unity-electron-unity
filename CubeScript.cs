@@ -7,20 +7,24 @@ using UnityEngine.Networking;
 
 public class CubeScript : MonoBehaviour
 {
-    public Texture dynTexture;
     void Start()
     {
         Debug.Log("started");
-        dynTexture = LoadPNG("Assets/Images/input.jpeg");
+        Texture dynTexture = LoadPNG("Assets/Images/input.jpeg");
+        GetComponent<Renderer>().material.mainTexture = dynTexture;
     }
 
     // Update is called once per frame
-    void Update(){
+    void Update()
+    {
         // Debug.Log("updated");
         try
         {
-            dynTexture = LoadPNG("Assets/Images/input.jpeg");
+            Texture dynTexture = LoadPNG("Assets/Images/input.jpeg");
             GetComponent<Renderer>().material.mainTexture = dynTexture;
+
+            // Destroy(dynTexture);
+            Resources.UnloadUnusedAssets();
         }
         catch (IOException e)
         {
@@ -28,18 +32,21 @@ public class CubeScript : MonoBehaviour
         }
     }
 
-    public static Texture2D LoadPNG(string filePath) {
-
-    Texture2D tex = null;
-    byte[] fileData;
-    if (File.Exists(filePath)){
-        // Debug.Log("the file exists");
-        fileData = File.ReadAllBytes(filePath);
-        tex = new Texture2D(2, 2);
-        tex.LoadImage(fileData); //..this will auto-resize the texture dimensions.
-    } else {
-        Debug.Log("the file doesnt exist");
-    }
-    return tex;
+    public static Texture2D LoadPNG(string filePath)
+    {
+        Texture2D tex = null;
+        byte[] fileData;
+        if (File.Exists(filePath))
+        {
+            // Debug.Log("the file exists");
+            fileData = File.ReadAllBytes(filePath);
+            tex = new Texture2D(2, 2);
+            tex.LoadImage(fileData); //..this will auto-resize the texture dimensions.
+        }
+        else
+        {
+            Debug.Log("the file doesnt exist");
+        }
+        return tex;
     }
 }
