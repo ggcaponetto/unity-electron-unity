@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using UnityEditor;
+using UnityEngine.Networking;
 
 public class CubeScript : MonoBehaviour
 {
@@ -15,8 +17,15 @@ public class CubeScript : MonoBehaviour
     // Update is called once per frame
     void Update(){
         // Debug.Log("updated");
-        dynTexture = LoadPNG("Assets/Images/input.jpeg");
-        GetComponent<Renderer>().material.mainTexture = dynTexture;
+        try
+        {
+            dynTexture = LoadPNG("Assets/Images/input.jpeg");
+            GetComponent<Renderer>().material.mainTexture = dynTexture;
+        }
+        catch (IOException e)
+        {
+            Debug.Log("the file is busy");
+        }
     }
 
     public static Texture2D LoadPNG(string filePath) {

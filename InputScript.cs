@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEditor;
+using Newtonsoft.Json;
+using UnityEngine.Networking;
 
 public class InputScript : MonoBehaviour
 {
@@ -32,23 +35,22 @@ public class InputScript : MonoBehaviour
                 string clickInfo = string.Format("x: {0}, y: {1}", hit.point.x, hit.point.y);
                 Debug.Log(clickInfo);
                 Debug.Log("Hit " + hit.ToString());
-                // ReadCommand();
-                // WriteCommand(clickInfo);
-                SendCommand(clickInfo);
+
+                // genrate the json to write
+                Dictionary<string, string> postBody = new Dictionary<string, string>();
+                postBody.Add("action", "click");
+                Dictionary<string, string> hitPoint = new Dictionary<string, string>();
+                hitPoint.Add("x", hit.point.x.ToString());
+                hitPoint.Add("y", hit.point.y.ToString());
+                postBody.Add("payload", JsonConvert.SerializeObject(hitPoint));
+                string jsonPostBody = JsonConvert.SerializeObject(postBody);
+                Post(jsonPostBody);
             }
         }
     }
 
-    void SendCommand(string commandString) {
-        StartCoroutine(browserIO.GetRequest("http://localhost:3000/?command=" + commandString));        
-    }
-
-    void ReadCommand() {
-        browserIO.ReadString();
-    }
-    void WriteCommand(string commandString)
-    {
-        browserIO.WriteString(commandString);
+    void Post(string postBody) {
+        StartCoroutine(browserIO.Post("http://localhost:3000", postBody));        
     }
 
 }
