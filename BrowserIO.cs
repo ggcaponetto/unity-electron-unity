@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Collections;
 using UnityEngine.Networking;
+using System.Text;
 
 public class BrowserIO
 {
@@ -32,16 +33,16 @@ public class BrowserIO
 
     public IEnumerator Post(string url, string data)
     {
-        UnityWebRequest www = UnityWebRequest.Post(url, data);
-        yield return www.SendWebRequest();
 
-        if (www.isNetworkError || www.isHttpError)
-        {
-            Debug.Log(www.error);
-        }
-        else
-        {
-            Debug.Log("Post complete!");
-        }
+        var request = new UnityWebRequest(url, "POST");
+
+        byte[] bodyRaw = Encoding.UTF8.GetBytes(data);
+        request.uploadHandler = (UploadHandler)new UploadHandlerRaw(bodyRaw);
+        request.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
+        request.SetRequestHeader("Content-Type", "application/json");
+
+        yield return request.Send();
+
+        Debug.Log("Status Code: " + request.responseCode);
     }
 }
